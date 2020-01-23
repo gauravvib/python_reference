@@ -68,3 +68,37 @@ def heatmap_numeric_w_dependent_variable(df, dependent_variable):
                     vmin=-1,
                     vmax=1) 
     return g
+
+# return numerical cols from df
+def numerical_cols(df):
+    df_num = df.select_dtypes(include = ['float64', 'int64'])
+    num_cols = df_num.cols
+    return num_cols
+
+# plot histogram of all numerical cols from df (check datatype first)
+def plt_hist_numerical(df):
+    df_num = df.select_dtypes(include = ['float64', 'int64'])
+    df_num.hist(figsize=(16, 20), bins=50, xlabelsize=8, ylabelsize=8);
+    
+# plot distribution of all categorical cols from df (check datatype first)
+def plt_hist_cat(df):
+    cols_not_num = [x for x in df.columns if x not in df.select_dtypes(include = ['float64', 'int64']).columns]
+    df_not_num = df[cols_not_num]
+    for i, ax in enumerate(fig.axes):
+        if i < len(df_not_num.columns):
+            ax.set_xticklabels(ax.xaxis.get_majorticklabels(), rotation=45)
+            sns.countplot(x=df_not_num.columns[i], alpha=0.7, data=df_not_num, ax=ax)
+    fig.tight_layout()    
+    
+# plot pair plots of dependent var with each of independent vars for checking whether outliers are affecting the correlation
+# give required col names to be included for this analysis
+def pair_plots_idv_dv(df, idv_cols, dv_col):
+    import seaborn as sns
+    for i in range(0, len(idv_cols), 5):
+        sns.pairplot(data=df,
+                    x_vars=df[idv_cols].columns[i:i+5],
+                    y_vars=dv_col)
+
+    
+
+             
