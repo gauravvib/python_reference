@@ -1,3 +1,4 @@
+# helper function 1
 def mono_bin(Y, X, n = 10):
     import traceback, re
     import numpy as np
@@ -55,6 +56,7 @@ def mono_bin(Y, X, n = 10):
     d3.IV = d3.IV.sum()    
     return(d3)
 
+# helper function 2
 def char_bin(Y, X):
     import traceback, re
     import numpy as np
@@ -92,7 +94,7 @@ def char_bin(Y, X):
     d3 = d3.reset_index(drop=True)    
     return(d3)
 
-
+# main function 1
 def data_vars(df1, target):
     import traceback, re
     import numpy as np
@@ -127,4 +129,97 @@ def data_vars(df1, target):
     iv = iv.reset_index()
     return(iv_df,iv)
 
+## calling function
 final_iv, IV = data_vars(test,test.target_kazutsugi)
+
+## Plot WOE for each variable
+def plot_woe(final_iv):
+    import plotly
+    import plotly.graph_objects as go
+    data = [go.Bar(
+                x=final_iv['VAR_NAME'],
+                y=final_iv['WOE'],
+                text=final_iv['VAR_NAME'],
+                marker=dict(
+                color='rgb(158,20,25)',
+                line=dict(
+                color='rgb(8,48,107)',
+                width=1.5,
+            )
+        ),
+        opacity=0.6
+        )]
+
+
+    layout = go.Layout(
+        title='Weight of Evidence(WOE)',
+            xaxis=dict(
+            title='Features',
+                tickangle=-45,
+            tickfont=dict(
+                size=10,
+                color='rgb(107, 107, 107)'
+            )
+        ),
+        yaxis=dict(
+            title='Weight of Evidence(WOE)',
+            titlefont=dict(
+                size=14,
+                color='rgb(107, 107, 107)'
+            ),
+            tickfont=dict(
+                size=14,
+                color='rgb(107, 107, 107)'
+            )
+        ),
+    )
+
+    plotly.offline.iplot({
+        "data": data,'layout':layout
+    })
+    
+## Plot IV for each variable
+def plot_iv(IV):
+    import plotly
+    import plotly.graph_objects as go
+    data = [go.Bar(
+                x=IV['VAR_NAME'],
+                y=IV['IV'],
+                text=IV['VAR_NAME'],
+                marker=dict(
+                color='rgb(58,256,225)',
+                line=dict(
+                color='rgb(8,48,107)',
+                width=1.5,
+            )
+        ),
+        opacity=0.6
+        )]
+
+
+    layout = go.Layout(
+        title='Information Values',
+            xaxis=dict(
+            tickangle=-45,
+            title='Features',
+            tickfont=dict(
+                size=10,
+                color='rgb(7, 7, 7)'
+            )
+        ),
+        yaxis=dict(
+            title='Information Value(IV)',
+            titlefont=dict(
+                size=14,
+                color='rgb(107, 107, 107)'
+            ),
+            tickfont=dict(
+                size=14,
+                color='rgb(107, 107, 107)'
+            )
+        ),
+    )
+
+    plotly.offline.iplot({
+        "data": data,'layout':layout
+    })
