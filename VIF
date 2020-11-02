@@ -1,0 +1,15 @@
+from statsmodels.stats.outliers_influence import variance_inflation_factor
+from patsy import dmatrices
+#gather features
+features = ['WEIGHT', 'SIC_MILES', 'FREIGHT_CLASS', 'CUST_REV']
+features = "+".join(features)
+
+# get y and X dataframes based on this regression:
+y, X = dmatrices('CTS599_DISCOUNT ~' + features, df_all, return_type='dataframe')
+
+# For each X, calculate VIF and save in dataframe
+vif = pd.DataFrame()
+vif["VIF Factor"] = [variance_inflation_factor(X.values, i) for i in range(X.shape[1])]
+vif["features"] = X.columns
+
+#Inspect the factors for each predictor variable, if the VIF is between 5-10, multicolinearity is likely present and you should consider dropping the variable.
